@@ -25,7 +25,9 @@ private int score;
     }
 
     public void resetScore() {
-        resetScore();
+        score = 0;
+        labelName.setText(ConfigData.instance.getName());
+        labelScore.setText("0");
     }
 
     public void incrementScore(int increment){
@@ -41,9 +43,13 @@ private int score;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        labelName = new javax.swing.JLabel();
         labelScore = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 102));
+
+        labelName.setText("name");
+        add(labelName);
 
         labelScore.setText("jLabel1");
         add(labelScore);
@@ -51,6 +57,7 @@ private int score;
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel labelName;
     private javax.swing.JLabel labelScore;
     // End of variables declaration//GEN-END:variables
 }

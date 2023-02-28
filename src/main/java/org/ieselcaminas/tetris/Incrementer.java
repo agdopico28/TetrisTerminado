@@ -10,4 +10,5 @@ package org.ieselcaminas.tetris;
  */
 public interface Incrementer {
     public void incrementScore(int increment);
+    public void resetScore();
 }

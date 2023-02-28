@@ -40,6 +40,11 @@ public class Tetris extends javax.swing.JFrame {
 
         scoreBoard = new org.ieselcaminas.tetris.ScoreBoard();
         board = new org.ieselcaminas.tetris.Board();
+        jMenuBar2 = new javax.swing.JMenuBar();
+        jMenu3 = new javax.swing.JMenu();
+        menuInitGame = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        eConfig = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(scoreBoard, java.awt.BorderLayout.PAGE_END);
@@ -48,17 +53,52 @@ public class Tetris extends javax.swing.JFrame {
         board.setLayout(boardLayout);
         boardLayout.setHorizontalGroup(
             boardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 509, Short.MAX_VALUE)
+            .addGap(0, 441, Short.MAX_VALUE)
         );
         boardLayout.setVerticalGroup(
             boardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 355, Short.MAX_VALUE)
+            .addGap(0, 443, Short.MAX_VALUE)
         );
 
         getContentPane().add(board, java.awt.BorderLayout.CENTER);
 
+        jMenu3.setText("File");
+
+        menuInitGame.setText("Init Game");
+        menuInitGame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuInitGameActionPerformed(evt);
+            }
+        });
+        jMenu3.add(menuInitGame);
+
+        jMenuBar2.add(jMenu3);
+
+        jMenu4.setText("Edit");
+
+        eConfig.setText("Configuration");
+        eConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eConfigActionPerformed(evt);
+            }
+        });
+        jMenu4.add(eConfig);
+
+        jMenuBar2.add(jMenu4);
+
+        setJMenuBar(jMenuBar2);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void menuInitGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuInitGameActionPerformed
+        board.initGame();
+    }//GEN-LAST:event_menuInitGameActionPerformed
+
+    private void eConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eConfigActionPerformed
+        ConfigDialog dialog = new ConfigDialog(this, true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_eConfigActionPerformed
 
     /**
      * @param args the command line arguments
@@ -98,6 +138,11 @@ public class Tetris extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.ieselcaminas.tetris.Board board;
+    private javax.swing.JMenuItem eConfig;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuItem menuInitGame;
     private org.ieselcaminas.tetris.ScoreBoard scoreBoard;
     // End of variables declaration//GEN-END:variables
 

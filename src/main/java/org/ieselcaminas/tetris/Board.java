@@ -43,6 +43,7 @@ public class Board extends javax.swing.JPanel {
 
         JOptionPane.showMessageDialog(this, "Game Over","Game Over" ,JOptionPane.INFORMATION_MESSAGE);
     }
+
     
     class MyKeyAdapter extends KeyAdapter {
         private boolean paused = false;
@@ -97,15 +98,38 @@ public class Board extends javax.swing.JPanel {
         myInit();
     }
 
+    
+    public void initGame() {
+        resetMatrix();
+        resetPosition();
+        currentShape = new Shape();
+        setDeltaTime();
+        timer.setDelay(deltaTime);
+        incrementer.resetScore();
+        timer.start();
+        repaint();
+    }
+    
+    public void setDeltaTime(){
+        switch(ConfigData.instance.getlevel()){
+            case 0: deltaTime = 500;
+            break;
+            case 1: deltaTime = 300;
+            break;
+            case 2: deltaTime= 150;
+            break;
+            default:
+                throw new AssertionError();
+        }
+    }
+    
     public void myInit() {
+        resetMatrix();
+        //deltaTime = 500;
         setFocusable(true);
         keyAdapter = new MyKeyAdapter();
         addKeyListener(keyAdapter);
-        currentShape = new Shape();
-        deltaTime = 500;
-        resetPosition();
-        resetMatrix();
-        timer = new Timer(deltaTime, new ActionListener() {
+        timer = new Timer(0, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (!keyAdapter.isPaused()) {
@@ -113,7 +137,7 @@ public class Board extends javax.swing.JPanel {
                 }
             }
         });
-        timer.start();
+        repaint();
     }
     
     public void resetMatrix() {
@@ -224,7 +248,9 @@ public class Board extends javax.swing.JPanel {
         super.paintComponent(g);
         paintFrame(g);
         paintMatrix(g);
-        paintShape(g);
+        if (currentShape != null) {
+            paintShape(g);
+        }
         Toolkit.getDefaultToolkit().sync();
     }
 
