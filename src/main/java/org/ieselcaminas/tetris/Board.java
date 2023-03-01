@@ -5,13 +5,16 @@
 package org.ieselcaminas.tetris;
 
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
@@ -30,24 +33,27 @@ public class Board extends javax.swing.JPanel {
     private MyKeyAdapter keyAdapter;
     public Tetrominoes[][] matrix;
     private Incrementer incrementer;
+    private GetScorer getScorer;
 
-
-    
-    public void setIncrementer(Incrementer incrementer){
+    public void setIncrementer(Incrementer incrementer) {
         this.incrementer = incrementer;
     }
 
     private void processGameOver() {
         timer.stop();
         removeKeyListener(keyAdapter);
-
-        JOptionPane.showMessageDialog(this, "Game Over","Game Over" ,JOptionPane.INFORMATION_MESSAGE);
+        JFrame parentJFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        ScoreDialog dialog = new ScoreDialog(parentJFrame, true);
+        dialog.setGetScorer(getScorer);
+        dialog.setVisible(true);
     }
 
+    public void setGetScorer(GetScorer getScorer){
+        this.getScorer = getScorer;
+    }
     
     class MyKeyAdapter extends KeyAdapter {
         private boolean paused = false;
-
         public boolean isPaused() {
             return paused;
         }
@@ -55,6 +61,7 @@ public class Board extends javax.swing.JPanel {
         public void setPaused(boolean paused) {
             this.paused = paused;
         }
+
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
@@ -74,7 +81,7 @@ public class Board extends javax.swing.JPanel {
                         currentShape = rotated;
                     }
                     break;
-                
+
                 case KeyEvent.VK_DOWN:
                     if (!paused && canMove(currentRow + 1, currentCol, currentShape)) {
                         currentRow++;
@@ -89,7 +96,7 @@ public class Board extends javax.swing.JPanel {
             repaint();
         }
     }
-    
+
     /**
      * Creates new form Board
      */
@@ -98,48 +105,51 @@ public class Board extends javax.swing.JPanel {
         myInit();
     }
 
-    
     public void initGame() {
+        addKeyListener(keyAdapter);
         resetMatrix();
         resetPosition();
         currentShape = new Shape();
         setDeltaTime();
-        timer.setDelay(deltaTime);
         incrementer.resetScore();
         timer.start();
         repaint();
     }
-    
-    public void setDeltaTime(){
-        switch(ConfigData.instance.getlevel()){
-            case 0: deltaTime = 500;
-            break;
-            case 1: deltaTime = 300;
-            break;
-            case 2: deltaTime= 150;
-            break;
+
+    public void setDeltaTime() {
+        switch (ConfigData.instance.getlevel()) {
+            case 0:
+                deltaTime = 500;
+                break;
+            case 1:
+                deltaTime = 300;
+                break;
+            case 2:
+                deltaTime = 150;
+                break;
             default:
                 throw new AssertionError();
         }
+        timer.setDelay(deltaTime);
     }
-    
+
     public void myInit() {
         resetMatrix();
         //deltaTime = 500;
         setFocusable(true);
         keyAdapter = new MyKeyAdapter();
-        addKeyListener(keyAdapter);
+        
         timer = new Timer(0, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (!keyAdapter.isPaused()) {
-                    tick();    
+                    tick();
                 }
             }
         });
         repaint();
     }
-    
+
     public void resetMatrix() {
         matrix = new Tetrominoes[NUM_ROWS][NUM_COLS];
         for (int row = 0; row < NUM_ROWS; row++) {
@@ -160,11 +170,11 @@ public class Board extends javax.swing.JPanel {
         } else {
             if (currentRow == 0) {
                 processGameOver();
-            } else{
-            movePieceToMatrix();
-            checkCompletedRows();
-            resetPosition();
-            currentShape.setRandomShape();
+            } else {
+                movePieceToMatrix();
+                checkCompletedRows();
+                resetPosition();
+                currentShape.setRandomShape();
             }
         }
         repaint();
@@ -193,21 +203,21 @@ public class Board extends javax.swing.JPanel {
     }
 
     private void removeRow(int row) {
-        for(int i = row; i > 0; i--){
-            for(int col = 0; col < NUM_COLS; col++){
+        for (int i = row; i > 0; i--) {
+            for (int col = 0; col < NUM_COLS; col++) {
                 matrix[i][col] = matrix[i - 1][col];
-                
+
             }
         }
         addZeroRow();
     }
-    
-    public void addZeroRow(){
-        for(int col = 0; col < NUM_COLS; col++){
+
+    public void addZeroRow() {
+        for (int col = 0; col < NUM_COLS; col++) {
             matrix[0][col] = Tetrominoes.NoShape;
         }
     }
-    
+
     private boolean canMove(int row, int col, Shape piece) {
         if (row + piece.maxY() >= NUM_ROWS) {
             return false;
