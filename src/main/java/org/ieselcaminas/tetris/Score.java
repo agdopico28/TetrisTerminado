@@ -4,6 +4,7 @@
  */
 package org.ieselcaminas.tetris;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,7 +13,11 @@ import java.util.Calendar;
  *
  * @author alu10191634
  */
-public class Score implements Comparable<Score>{
+public class Score implements Comparable<Score>, Serializable{
+
+    public int getLevel() {
+        return level;
+    }
     
     private String name;
     private int score;
