@@ -4,6 +4,10 @@
  */
 package org.ieselcaminas.tetris;
 
+
+import java.util.Calendar;
+import java.util.List;
+
 /**
  *
  * @author alu10191634
@@ -18,10 +22,18 @@ public class ScoreDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         scores = new Scores();
+       
+        setLocationRelativeTo(null);
     }
 
     public void setGetScorer(GetScorer getScorer){
         this.getScorer = getScorer;
+        Score score = new Score(ConfigData.instance.getName(), 
+                getScorer.getScore(), 
+                Calendar.getInstance(), 
+                ConfigData.instance.getlevel());
+        scores.addScore(score);
+        updateHighScores();
     }
     
     /**
@@ -48,27 +60,12 @@ public class ScoreDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        listBegginer.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(listBegginer);
 
         lHighScore.setText("HighScore Rank");
 
-        listNormal.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(listNormal);
 
-        listExpert.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane3.setViewportView(listExpert);
 
         jLabel1.setText("Begginer");
@@ -119,19 +116,19 @@ public class ScoreDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(lHighScore)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1))
-                .addGap(13, 13, 13)
                 .addComponent(jButton1)
-                .addContainerGap())
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         pack();
@@ -196,4 +193,30 @@ public class ScoreDialog extends javax.swing.JDialog {
     private javax.swing.JList<String> listExpert;
     private javax.swing.JList<String> listNormal;
     // End of variables declaration//GEN-END:variables
+
+    private void updateHighScores() {
+        List<Score>[] lists = scores.getLists();
+        int numList = 0;
+        for(List<Score> list : lists){
+            String[] arrayStr = new String[list.size()];
+            for(int i = 0 ;i < arrayStr.length; i++){
+                arrayStr[i] = list.get(i).toString();
+            }
+            switch (numList) {
+                case 0:
+                    listBegginer.setListData(arrayStr);
+                    break;
+                case 1:
+                    listNormal.setListData(arrayStr);
+                    break;
+                case 2:
+                    listExpert.setListData(arrayStr);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+            numList++;
+            
+        }
+    }
 }

@@ -106,6 +106,7 @@ public class Board extends javax.swing.JPanel {
     }
 
     public void initGame() {
+        removeKeyListener(keyAdapter);
         addKeyListener(keyAdapter);
         resetMatrix();
         resetPosition();

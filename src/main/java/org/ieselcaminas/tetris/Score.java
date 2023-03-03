@@ -45,4 +45,11 @@ public class Score implements Comparable<Score>, Serializable{
         return i.compareTo(i2);
     }
     
+    @Override
+    public String toString(){
+        SimpleDateFormat form = 
+                new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = form.format(date.getTime());
+        return name + ": " +  score + ": " + dateStr;
+    }
 }
